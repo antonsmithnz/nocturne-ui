@@ -15,6 +15,8 @@ import { useLyrics } from "../../hooks/useLyrics";
 import { useGestureControls } from "../../hooks/useGestureControls";
 import { useElapsedTime } from "../../hooks/useElapsedTime";
 import { useButtonMapping } from "../../hooks/useButtonMapping";
+import { usePlayerClock } from "../../hooks/usePlayerClock";
+import { useCurrentTime } from "../../hooks/useCurrentTime";
 import { useSettings } from "../../contexts/SettingsContext";
 import ButtonMappingOverlay from "../common/overlays/ButtonMappingOverlay";
 import DeviceSwitcherModal from "./DeviceSwitcherModal";
@@ -97,6 +99,8 @@ function NowPlaying({
   const contentContainerRef = useRef(null);
 
   const { elapsedTimeEnabled } = useElapsedTime();
+  const { playerClockEnabled } = usePlayerClock();
+  const { currentTime } = useCurrentTime();
   const { settings } = useSettings();
 
   const { getPlaylist } = useSpotifyWebSocket();
@@ -891,6 +895,13 @@ function NowPlaying({
       className="flex flex-col gap-1 h-screen w-full z-10 fadeIn-animation"
       ref={containerRef}
     >
+      {playerClockEnabled && (
+        <div
+          className="fixed top-0 right-0 p-4 text-[26px] font-[580] text-white tracking-tight leading-none"
+        >
+          {currentTime}
+        </div>
+      )}
       <div ref={contentContainerRef}>
         <div className="md:w-1/3 flex flex-row items-center px-12 pt-10">
           <div

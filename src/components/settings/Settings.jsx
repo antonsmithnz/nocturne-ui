@@ -81,6 +81,16 @@ const settingsStructure = {
         defaultValue: false,
       },
       {
+        id: "show-time-suffix",
+        title: "Show AM/PM",
+        type: "toggle",
+        description:
+          "Show AM/PM on the clock.",
+        storageKey: "useTimeSuffix",
+        defaultValue: false,
+        visibleRequirement: "!settings.use24HourTime"
+      },
+      {
         id: "factory-reset",
         title: "Factory Reset",
         type: "action",
@@ -173,6 +183,14 @@ const settingsStructure = {
         defaultValue: false,
       },
       {
+        id: "player-clock",
+        title: "Show Clock in Player",
+        type: "toggle",
+        description: "Display the clock in the top right of the player.",
+        storageKey: "playerClockEnabled",
+        defaultValue: false,
+      },
+      {
         id: "knob-seeks-playback",
         title: "Knob Seeks Playback",
         type: "toggle",
@@ -205,6 +223,7 @@ const settingsStructure = {
           "vakst",
           "álvaro s",
           "Justin Reynard",
+          "apeschock",
         ],
       },
       {
@@ -800,6 +819,9 @@ export default function Settings({ onOpenDonationModal, setActiveSection }) {
       const SubpageComponent = item.subpage.component;
       return <SubpageComponent key={item.id} />;
     }
+
+    if(item.visibleRequirement && !eval(item.visibleRequirement))
+      return;
 
     switch (item.type) {
       case "navigate":

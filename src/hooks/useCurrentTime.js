@@ -43,6 +43,13 @@ export function useCurrentTime() {
     fetchTimezone();
   }, [appReady]);
 
+  const getSuffix = (hours24) => {
+    if (!settings.use24HourTime && settings.useTimeSuffix) {
+      return hours24 >= 12 ? ' PM' : ' AM';
+    }
+    return '';
+  };
+
   useEffect(() => {
     let retryTimeout = null;
 
@@ -56,6 +63,7 @@ export function useCurrentTime() {
           const [hours24, minutes] = timeString.split(":");
 
           let displayHours;
+          const suffix = getSuffix(parseInt(hours24));
           if (settings.use24HourTime) {
             displayHours = hours24;
             setIsFourDigits(true);
@@ -65,7 +73,7 @@ export function useCurrentTime() {
             setIsFourDigits(parseInt(displayHours) >= 10);
           }
 
-          setCurrentTime(`${displayHours}:${minutes}`);
+          setCurrentTime(`${displayHours}:${minutes}${suffix}`);
         } else {
           retryTimeout = setTimeout(updateTime, 5000);
         }
@@ -89,7 +97,7 @@ export function useCurrentTime() {
       if (retryTimeout) clearTimeout(retryTimeout);
       window.removeEventListener("timeFormatChanged", handleTimeFormatChange);
     };
-  }, [settings.use24HourTime, appReady]);
+  }, [settings.use24HourTime, settings.useTimeSuffix, appReady]);
 
   return {
     currentTime,
